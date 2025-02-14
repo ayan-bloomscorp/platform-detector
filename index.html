@@ -105,14 +105,14 @@
         }
 
         function resolveBrowser(ua) {
-            if (ua.includes("CriOS")) return "Chrome (iOS)"; // Chrome on iOS
-            if (ua.includes("Edg")) return "ME_Chromium";
-            if (ua.includes("OPR")) return "Opera_Next";
+            if (ua.includes("CriOS")) return "Google Chrome (iOS)"; // Chrome on iOS
+            if (ua.includes("Edg")) return "Microsoft Edge (Chromium)";
+            if (ua.includes("OPR")) return "Opera Next";
             if (ua.includes("Opera")) return "Opera";
-            if (ua.includes("Chrome")) return "Chrome"; // Standard Chrome
-            if (ua.includes("Safari")) return "Safari"; // Safari comes AFTER Chrome to avoid false detection
-            if (ua.includes("Firefox")) return "Firefox";
-            if (ua.includes("MSIE") || ua.includes("Trident")) return "IE";
+            if (ua.includes("Chrome")) return "Google Chrome"; // Standard Chrome
+            if (ua.includes("Safari")) return "Apple Safari"; // Safari comes AFTER Chrome to avoid false detection
+            if (ua.includes("Firefox")) return "Mozilla Firefox";
+            if (ua.includes("MSIE") || ua.includes("Trident")) return "Microsoft Internet Explorer";
             return "Unknown";
         }
 
