@@ -11,40 +11,49 @@
             background: #1e1e2f;
             color: #f0f0f0;
             text-align: center;
-            padding: 50px;
+            padding: 20px;
             margin: 0;
         }
 
         .container {
             background: #29293d;
-            padding: 30px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             display: inline-block;
-            max-width: 450px;
-            width: 100%;
+            max-width: 90%;
+            width: 450px;
+            text-align: left;
         }
 
         h2 {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            text-align: center;
         }
 
         p {
-            font-size: 18px;
-            margin: 10px 0;
+            font-size: 16px;
+            margin: 8px 0;
         }
 
-        textarea {
+        textarea,
+        #userAgentDisplay {
             width: calc(100% - 20px);
             padding: 10px;
             border: none;
             border-radius: 5px;
             margin: 10px 0;
-            font-size: 16px;
-            height: 60px;
+            font-size: 14px;
             resize: none;
             background: #1c1c2b;
             color: #f0f0f0;
+            display: block;
+            min-height: 80px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
         }
 
         button {
@@ -52,14 +61,26 @@
             border: none;
             padding: 10px 15px;
             color: white;
-            font-size: 16px;
+            font-size: 14px;
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s;
+            width: 48%;
         }
 
         button:hover {
             background: #005f99;
+        }
+
+        .full-width {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -71,8 +92,11 @@
         <p><strong>Version:</strong> <span id="version"></span></p>
         <p><strong>OS:</strong> <span id="os"></span></p>
         <p><strong>Device:</strong> <span id="device"></span></p>
+        <h3>Your User Agent</h3>
+        <textarea id="userAgentDisplay" readonly></textarea>
+        <button class="full-width" onclick="copyUserAgent()">Copy</button>
         <textarea id="customUserAgent" placeholder="Enter custom user agent"></textarea>
-        <button onclick="updateInfo()">Test</button>
+        <button class="full-width" onclick="updateInfo()">Test</button>
     </div>
 
     <script>
@@ -120,6 +144,13 @@
             document.getElementById("version").textContent = resolveBrowserVersion(userAgent);
             document.getElementById("os").textContent = resolveOS(userAgent);
             document.getElementById("device").textContent = resolveDevice(userAgent);
+            document.getElementById("userAgentDisplay").value = userAgent;
+        }
+
+        function copyUserAgent() {
+            const userAgentText = document.getElementById("userAgentDisplay");
+            userAgentText.select();
+            document.execCommand("copy");
         }
 
         updateInfo();
