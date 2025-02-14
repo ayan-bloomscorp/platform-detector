@@ -104,10 +104,6 @@
             return customUA || navigator.userAgent;
         }
 
-        function isDesktopModeEnabled() {
-            return window.devicePixelRatio < 2 && window.innerWidth > 800;
-        }
-
         function resolveBrowser(ua) {
             if (ua.includes("CriOS")) return "Google Chrome (iOS)"; // Chrome on iOS
             if (ua.includes("Edg")) return "Microsoft Edge (Chromium)";
@@ -126,11 +122,11 @@
         }
 
         function resolveOS(ua) {
+            if (/Android/i.test(ua)) return "Android";  // Android should always take priority over Linux
             if (/Windows/i.test(ua)) return "Windows";
-            if (/Android/i.test(ua)) return "Android";
             if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
             if (/Mac OS/i.test(ua)) return /iPad|Macintosh/.test(ua) && 'ontouchend' in document ? "iOS" : "MacOS";
-            if (/Linux/i.test(ua)) return "Linux";
+            if (/Linux/i.test(ua) && !/Android/i.test(ua)) return "Linux"; // Only return Linux if it's NOT Android
             return "Unknown";
         }
 
@@ -151,7 +147,10 @@
             if (isWebview(ua)) return "WebView"; // Now correctly detects WebView
 
             if (/iPad/i.test(ua) || (/Macintosh/.test(ua) && 'ontouchend' in document)) return "Tablet";
-            if (/Mobile|iPhone|BlackBerry|IEMobile|Kindle|Silk-Accelerated|hpw|webOS/i.test(ua)) return "Mobile";
+            if (/Mobile|iPhone|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|hpw|webOS/i.test(ua)) {
+                return window.innerWidth > 800 ? "Desktop Mode (Mobile)" : "Mobile";
+            }
+
             return "Desktop";
         }
 
@@ -163,9 +162,6 @@
             document.getElementById("os").textContent = resolveOS(userAgent);
             document.getElementById("device").textContent = resolveDevice(userAgent);
             document.getElementById("userAgentDisplay").value = userAgent;
-
-            const desktopMode = isDesktopModeEnabled() ? "ON" : "OFF";
-            document.getElementById("desktopMode").textContent = desktopMode;
         }
 
         function copyUserAgent() {
@@ -174,14 +170,7 @@
             document.execCommand("copy");
         }
 
-        // Add a section to show "Desktop Mode" status
-        document.addEventListener("DOMContentLoaded", () => {
-            const container = document.querySelector(".container");
-            const desktopModeElement = document.createElement("p");
-            desktopModeElement.innerHTML = `<strong>Desktop Mode:</strong> <span id="desktopMode"></span>`;
-            container.insertBefore(desktopModeElement, container.children[5]);
-            updateInfo();
-        });
+        updateInfo();
     </script>
 </body>
 
