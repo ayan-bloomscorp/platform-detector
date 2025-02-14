@@ -123,10 +123,10 @@
 
         function resolveOS(ua) {
             if (/Windows/i.test(ua)) return "Windows";
-            if (/Mac OS/i.test(ua)) return /iPad|Macintosh/.test(ua) && 'ontouchend' in document ? "iOS" : "MacOS";
-            if (/Linux/i.test(ua)) return "Linux";
             if (/Android/i.test(ua)) return "Android";
             if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
+            if (/Mac OS/i.test(ua)) return /iPad|Macintosh/.test(ua) && 'ontouchend' in document ? "iOS" : "MacOS";
+            if (/Linux/i.test(ua)) return "Linux";
             return "Unknown";
         }
 
