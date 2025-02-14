@@ -105,12 +105,12 @@
         }
 
         function resolveBrowser(ua) {
-            if (ua.includes("Opera")) return "Opera";
-            if (ua.includes("OPR")) return "Opera_Next";
-            if (ua.includes("Edge")) return "ME_Legacy";
+            if (ua.includes("CriOS")) return "Chrome (iOS)"; // Chrome on iOS
             if (ua.includes("Edg")) return "ME_Chromium";
-            if (ua.includes("Chrome")) return "Chrome";
-            if (ua.includes("Safari")) return "Safari";
+            if (ua.includes("OPR")) return "Opera_Next";
+            if (ua.includes("Opera")) return "Opera";
+            if (ua.includes("Chrome")) return "Chrome"; // Standard Chrome
+            if (ua.includes("Safari")) return "Safari"; // Safari comes AFTER Chrome to avoid false detection
             if (ua.includes("Firefox")) return "Firefox";
             if (ua.includes("MSIE") || ua.includes("Trident")) return "IE";
             return "Unknown";
