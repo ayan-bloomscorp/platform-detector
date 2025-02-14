@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Info</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #1e1e2f;
+            color: #f0f0f0;
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+        }
+
+        .container {
+            background: #29293d;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: inline-block;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 16px;
+            height: 60px;
+            resize: none;
+            background: #1c1c2b;
+            color: #f0f0f0;
+        }
+
+        button {
+            background: #007acc;
+            border: none;
+            padding: 10px 15px;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #005f99;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Browser & Device Info</h2>
+        <p><strong>Browser:</strong> <span id="browser"></span></p>
+        <p><strong>Version:</strong> <span id="version"></span></p>
+        <p><strong>OS:</strong> <span id="os"></span></p>
+        <p><strong>Device:</strong> <span id="device"></span></p>
+        <textarea id="customUserAgent" placeholder="Enter custom user agent"></textarea>
+        <button onclick="updateInfo()">Test</button>
+    </div>
+
+    <script>
+        function resolveUserAgent(customUA) {
+            return customUA || navigator.userAgent;
+        }
+
+        function resolveBrowser(ua) {
+            if (ua.includes("Opera")) return "Opera";
+            if (ua.includes("OPR")) return "Opera_Next";
+            if (ua.includes("Edge")) return "ME_Legacy";
+            if (ua.includes("Edg")) return "ME_Chromium";
+            if (ua.includes("Chrome")) return "Chrome";
+            if (ua.includes("Safari")) return "Safari";
+            if (ua.includes("Firefox")) return "Firefox";
+            if (ua.includes("MSIE") || ua.includes("Trident")) return "IE";
+            return "Unknown";
+        }
+
+        function resolveBrowserVersion(ua) {
+            const match = ua.match(/(Chrome|Firefox|Safari|Edge|IE|Opera|Trident)[\/\s](\d+(\.\d+)*)/);
+            return match ? match[2] : 'Unknown';
+        }
+
+        function resolveOS(ua) {
+            if (/Windows/i.test(ua)) return "Windows";
+            if (/Mac OS/i.test(ua)) return /iPad|Macintosh/.test(ua) && 'ontouchend' in document ? "iOS" : "MacOS";
+            if (/Linux/i.test(ua)) return "Linux";
+            if (/Android/i.test(ua)) return "Android";
+            if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
+            return "Unknown";
+        }
+
+        function resolveDevice(ua) {
+            if (/; wv\)/i.test(ua) || /\bVersion\/\d+.*Chrome\/\d+ Mobile/i.test(ua)) return "WebView";
+            if (/iPad/i.test(ua) || (/Macintosh/.test(ua) && 'ontouchend' in document)) return "Tablet";
+            if (/Mobile|iPhone|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|hpw|webOS/i.test(ua)) return "Mobile";
+            return "Desktop";
+        }
+
+        function updateInfo() {
+            const customUA = document.getElementById("customUserAgent").value.trim();
+            const userAgent = resolveUserAgent(customUA);
+            document.getElementById("browser").textContent = resolveBrowser(userAgent);
+            document.getElementById("version").textContent = resolveBrowserVersion(userAgent);
+            document.getElementById("os").textContent = resolveOS(userAgent);
+            document.getElementById("device").textContent = resolveDevice(userAgent);
+        }
+
+        updateInfo();
+    </script>
+</body>
+
+</html>
