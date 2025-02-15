@@ -135,8 +135,6 @@
         }
 
         function isWebview(ua) {
-            const ua = navigator.userAgent || '';
-
             // User-Agent detection for WebView
             const userAgentCheck = /WebView|wv/.test(ua) ||
                 /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(ua);
