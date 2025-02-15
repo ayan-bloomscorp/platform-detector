@@ -130,25 +130,27 @@
             return "Unknown";
         }
 
-        const webviewRules = [
-            'WebView',
-            '(iPhone|iPod|iPad)(?!.*Safari)',
-            'Android.*(;\\s+wv|Version/\\d.\\d\\s+Chrome/\\d+(\\.0){3})',
-            'Linux; U; Android'
-        ];
-
-        const webviewRegExp = new RegExp('(' + webviewRules.join('|') + ')', 'ig');
-
         function isWebview(ua) {
-            return !!ua.match(webviewRegExp);
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            // User-Agent based detection (WebView indicators)
+            const userAgentCheck = /WebView|wv/.test(userAgent) ||
+                /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(userAgent);
+
+            // Feature-based detection (Missing certain properties)
+            const featureCheck = (window.navigator.standalone === false) ||
+                (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+                (document.referrer.startsWith('android-app://') || document.referrer.startsWith('ios-app://'));
+
+            return userAgentCheck || featureCheck;
         }
 
         function resolveDevice(ua) {
-            if (isWebview(ua)) return "WebView"; // Now correctly detects WebView
+            if (isWebview(ua)) return "WebView";
 
             if (/iPad/i.test(ua) || (/Macintosh/.test(ua) && 'ontouchend' in document)) return "Tablet";
             if (/Mobile|iPhone|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|hpw|webOS/i.test(ua)) {
-                return window.innerWidth > 800 ? "Desktop Mode (Mobile)" : "Mobile";
+                return "Mobile";
             }
 
             return "Desktop";
