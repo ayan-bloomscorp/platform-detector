@@ -135,18 +135,21 @@
         }
 
         function isWebview(ua) {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const ua = navigator.userAgent || '';
 
-            // User-Agent based detection (WebView indicators)
-            const userAgentCheck = /WebView|wv/.test(userAgent) ||
-                /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(userAgent);
+            // User-Agent detection for WebView
+            const userAgentCheck = /WebView|wv/.test(ua) ||
+                /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(ua);
 
-            // Feature-based detection (Missing certain properties)
-            const featureCheck = (window.navigator.standalone === false) ||
+            // Feature detection: Check missing properties
+            const featureCheck = ('standalone' in navigator && !navigator.standalone) ||
                 (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
                 (document.referrer.startsWith('android-app://') || document.referrer.startsWith('ios-app://'));
 
-            return userAgentCheck || featureCheck;
+            // Extra check: iOS Safari exposes "navigator.platform" but WebView does not
+            const missingFeatureCheck = typeof navigator.platform === 'undefined';
+
+            return userAgentCheck || featureCheck || missingFeatureCheck;
         }
 
         function resolveDevice(ua) {
