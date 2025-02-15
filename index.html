@@ -135,16 +135,15 @@
         }
 
         function isWebview(ua) {
-            // User-Agent detection for WebView
-            const userAgentCheck = /WebView|wv/.test(ua) ||
-                /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(ua);
+            const userAgentCheck = !!ua.match(new RegExp(
+                '(WebView|(iPhone|iPod|iPad)(?!.*Safari)|Android.*(;\\s+wv|Version/\\d.\\d\\s+Chrome/\\d+(\\.0){3})|Linux; U; Android)', 'ig')
+            );
 
-            // Feature detection: Check missing properties
-            const featureCheck = ('standalone' in navigator && !navigator.standalone) ||
-                (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
-                (document.referrer.startsWith('android-app://') || document.referrer.startsWith('ios-app://'));
+            const featureCheck = window.matchMedia('(display-mode: standalone)').matches ||
+                navigator.standalone ||
+                document.referrer.startsWith('android-app://') ||
+                document.referrer.startsWith('ios-app://');
 
-            // Extra check: iOS Safari exposes "navigator.platform" but WebView does not
             const missingFeatureCheck = typeof navigator.platform === 'undefined';
 
             return userAgentCheck || featureCheck || missingFeatureCheck;
