@@ -104,6 +104,10 @@
             return customUA || navigator.userAgent;
         }
 
+        function isDesktopModeEnabled() {
+            return window.innerWidth > screen.availWidth;
+        }
+
         function resolveBrowser(ua) {
             if (ua.includes("CriOS")) return "Google Chrome (iOS)"; // Chrome on iOS
             if (ua.includes("Edg")) return "Microsoft Edge (Chromium)";
@@ -164,6 +168,10 @@
             document.getElementById("os").textContent = resolveOS(userAgent);
             document.getElementById("device").textContent = resolveDevice(userAgent);
             document.getElementById("userAgentDisplay").value = userAgent;
+
+            // Check for Desktop Mode
+            const desktopMode = isDesktopModeEnabled() ? "ON" : "OFF";
+            document.getElementById("desktopMode").textContent = desktopMode;
         }
 
         function copyUserAgent() {
@@ -172,7 +180,14 @@
             document.execCommand("copy");
         }
 
-        updateInfo();
+        // Add a section to show "Desktop Mode" status
+        document.addEventListener("DOMContentLoaded", () => {
+            const container = document.querySelector(".container");
+            const desktopModeElement = document.createElement("p");
+            desktopModeElement.innerHTML = `<strong>Desktop Mode:</strong> <span id="desktopMode"></span>`;
+            container.insertBefore(desktopModeElement, container.children[5]);
+            updateInfo();
+        });
     </script>
 </body>
 
